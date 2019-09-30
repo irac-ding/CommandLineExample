@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,13 @@ namespace ReadText.Demo
     {
         public static int Main(string[] args)
         {
+            var headOptions = new HeadOptions { Lines = 50, Bytes = 10000, Quiet=true, FileName= "log.txt" };
+            var headOptionsArguments = CommandLine.Parser.Default.FormatCommandLine(headOptions);
+            Console.WriteLine(JsonConvert.SerializeObject(headOptionsArguments));
+
+            var tailOptions = new TailOptions { Lines = 50, Bytes = 10000, Quiet = true, FileName = "log.txt" };
+            var tailOptionsArguments = CommandLine.Parser.Default.FormatCommandLine(tailOptions);
+            Console.WriteLine(JsonConvert.SerializeObject(tailOptionsArguments));
             Func<IOptions, string> reader = opts =>
             {
                 var fromTop = opts.GetType() == typeof(HeadOptions);
@@ -46,7 +54,7 @@ namespace ReadText.Demo
 
             printIfNotEmpty(texts.Item1);
             printIfNotEmpty(texts.Item2);
-
+            Console.ReadLine();
             return texts.Equals(MakeError()) ? 1 : 0;
         }
 
